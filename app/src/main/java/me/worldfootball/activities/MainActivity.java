@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupUI();
+        drawUI();
         if (mFragmentManager == null) mFragmentManager = getFragmentManager();
 
         mFragmentManager.beginTransaction()
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void setupUI() {
+    private void drawUI() {
 
     }
 
