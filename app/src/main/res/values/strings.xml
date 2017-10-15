@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">WorldFootball</string>
+    <string name="app_name">World Football</string>
+    <string name="splashscreen_title">Welcome</string>
 </resources>
