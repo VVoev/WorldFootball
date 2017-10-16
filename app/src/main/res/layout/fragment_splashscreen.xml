@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/splashscreen_title"
-        android:textColor="@color/splashscreen_title"
+        android:textColor="@color/accent"
         android:textStyle="bold|italic"
         android:textSize="@dimen/splashscreen_title_size"/>
     <ProgressBar

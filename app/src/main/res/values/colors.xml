@@ -5,5 +5,12 @@
     <color name="accent">#69F0AE</color>
     <color name="window_background">#E8F5E9</color>
 
-    <color name="splashscreen_title">#FFF</color>
+
+    <color name="toolbar_title">#000</color>
+    <color name="toolbar_subtitle">#333</color>
+    <color name="navigation_background">#233</color>
+    <color name="navigation_background_separator">#444</color>
+    <color name="navigation_background_pressed">#344</color>
+    <color name="navigation_text_color">#ccc</color>
+
 </resources>

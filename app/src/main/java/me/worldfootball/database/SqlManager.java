@@ -137,5 +137,4 @@ public class SqlManager extends SQLiteOpenHelper {
         getWritableDatabase().delete(tableName, null, null);
     }
 
-
 }

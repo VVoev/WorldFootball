@@ -26,4 +26,23 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
+    <style name="AppTheme.Toolbar">
+        <item name="titleTextColor">@color/toolbar_title</item>
+        <item name="subtitleTextColor">@color/toolbar_subtitle</item>
+        <item name="android:textColorSecondary">@color/toolbar_title</item>
+    </style>
+
+    <style name="AppTheme.Navigation">
+        <item name="android:windowBackground">@color/navigation_background</item>
+        <item name="android:textColorHint">@color/navigation_text_color</item>
+        <item name="android:textColor">@color/navigation_text_color</item>
+    </style>
+
+    <style name="AppTheme.AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/primary</item>
+        <item name="android:background">#FFF</item>
+    </style>
+
 </resources>
