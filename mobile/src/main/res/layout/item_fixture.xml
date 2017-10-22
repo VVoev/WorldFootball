@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/fixtures_list_item_height"
+	android:background="@drawable/fixtures_list_item"
+	android:clickable="true">
+
+	<FrameLayout
+		android:id="@+id/result_layout"
+		android:layout_width="60dp"
+		android:layout_height="match_parent"
+		android:layout_centerHorizontal="true">
+
+		<TextView
+			android:id="@+id/date"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_gravity="center_vertical"
+			android:gravity="center"
+			android:visibility="gone"
+			android:textColor="@color/fixtures_list_text"
+			tools:text="21:30"/>
+
+		<TextView
+			android:id="@+id/result"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:paddingLeft="8dp"
+			android:paddingRight="8dp"
+			android:paddingTop="4dp"
+			android:paddingBottom="4dp"
+			android:background="@drawable/fixture_list_item_result_background"
+			android:gravity="center"
+			android:textColor="@color/fixtures_list_text"
+			tools:text="1 : 2"/>
+
+	</FrameLayout>
+
+	<TextView
+		android:id="@+id/home_team_name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_toLeftOf="@id/result_layout"
+		android:layout_toStartOf="@id/result_layout"
+		android:paddingLeft="@dimen/fixtures_list_item_horizontal_padding"
+		android:paddingRight="@dimen/fixtures_list_item_horizontal_padding"
+		android:textColor="@color/fixtures_list_text"
+		android:textSize="@dimen/fixtures_list_item_team_size"
+		tools:text="Home team name"/>
+
+
+	<TextView
+		android:id="@+id/away_team_name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_toEndOf="@+id/result_layout"
+		android:layout_toRightOf="@+id/result_layout"
+		android:gravity="end"
+		android:paddingLeft="@dimen/fixtures_list_item_horizontal_padding"
+		android:paddingRight="@dimen/fixtures_list_item_horizontal_padding"
+		android:textColor="@color/fixtures_list_text"
+		android:textSize="@dimen/fixtures_list_item_team_size"
+		tools:text="Away team name"/>
+
+</RelativeLayout>
