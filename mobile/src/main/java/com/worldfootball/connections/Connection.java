@@ -50,8 +50,8 @@ public class Connection {
                 buffer.append(line);
             }
             String response = buffer.toString();
-            L.i(Connection.class, "(Success)request->" + request);
-            L.i(Connection.class, "(Success)response->" + response);
+            L.i(Connection.class, "(Success)REQUEST->" + request);
+            L.i(Connection.class, "(Success)RESPONSE->" + response);
             return response;
         } catch (IOException e) {
             L.e(Connection.class, e.toString());

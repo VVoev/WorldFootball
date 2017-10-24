@@ -17,55 +17,52 @@ import java.util.ArrayList;
 
 public class ScoresAdapter extends AbstractRecyclerAdapter<Scores, ScoresAdapter.ScoresViewHolder> {
 
-	private Resources mResources;
+    private Resources mResources;
 
-	public ScoresAdapter(Resources resources, ArrayList<Scores> list) {
-		super(list);
-		mResources = resources;
-	}
+    public ScoresAdapter(Resources resources, ArrayList<Scores> list) {
+        super(list);
+        mResources = resources;
+    }
 
-	@Override
-	public ScoresViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_scores, parent, false);
-		return new ScoresViewHolder(view);
-	}
+    @Override
+    public ScoresViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_scores, parent, false);
+        return new ScoresViewHolder(view);
+    }
 
-	@Override
-	public void onBindViewHolder(ScoresViewHolder holder, int position) {
-		Scores item = mList.get(position);
-		System.out.println(item.getCrestURI());
-		ImageLoader.getInstance().displayImage(item.getCrestURI(),holder.mIcon);
-		holder.mRank.setText(String.valueOf(item.getRank()));
-		holder.mTeam.setText(item.getTeam());
-		holder.mPlayedGames.setText(String.valueOf(item.getPlayedGames()));
-		holder.mGoals.setText(String.valueOf(item.getGoals()));
-		holder.mAgainstDifference.setText(String.format(
-				mResources.getString(R.string.scores_against_difference),
-				item.getGoalAgainst(),
-				item.getGoalDifference()));
-		holder.mPoints.setText(String.valueOf(item.getPoints()));
-	}
+    @Override
+    public void onBindViewHolder(ScoresViewHolder holder, int position) {
+        Scores item = mList.get(position);
+        System.out.println(item.getCrestURI());
+        ImageLoader.getInstance().displayImage(item.getCrestURI(), holder.mIcon);
+        holder.mRank.setText(String.valueOf(item.getRank()));
+        holder.mTeam.setText(item.getTeam());
+        holder.mPlayedGames.setText(String.valueOf(item.getPlayedGames()));
+        holder.mGoals.setText(String.valueOf(item.getGoals()));
+        holder.mAgainstDifference.setText(String.format(mResources.getString(R.string.scores_against_difference), item.getGoalAgainst(), item.getGoalDifference()));
+        holder.mPoints.setText(String.valueOf(item.getPoints()));
+    }
 
-	public static class ScoresViewHolder extends RecyclerView.ViewHolder {
+    public static class ScoresViewHolder extends RecyclerView.ViewHolder {
 
-		private ImageView mIcon;
-		private TextView mRank,
-				mTeam,
-				mPlayedGames,
-				mGoals,
-				mAgainstDifference,
-				mPoints;
+        private ImageView mIcon;
+        private TextView mRank;
+        private TextView mTeam;
+        private TextView mPlayedGames;
+        private TextView mGoals;
+        private TextView mAgainstDifference;
+        private TextView mPoints;
 
-		public ScoresViewHolder(View itemView) {
-			super(itemView);
-			mIcon = (ImageView) itemView.findViewById(R.id.icon);
-			mRank = (TextView) itemView.findViewById(R.id.rank);
-			mTeam = (TextView) itemView.findViewById(R.id.team);
-			mPlayedGames = (TextView) itemView.findViewById(R.id.played_games);
-			mGoals = (TextView) itemView.findViewById(R.id.goals);
-			mAgainstDifference = (TextView) itemView.findViewById(R.id.against_difference);
-			mPoints = (TextView) itemView.findViewById(R.id.points);
-		}
-	}
+        public ScoresViewHolder(View itemView) {
+            super(itemView);
+            mIcon = (ImageView) itemView.findViewById(R.id.icon);
+            mRank = (TextView) itemView.findViewById(R.id.rank);
+            mTeam = (TextView) itemView.findViewById(R.id.team);
+            mPlayedGames = (TextView) itemView.findViewById(R.id.played_games);
+            mGoals = (TextView) itemView.findViewById(R.id.goals);
+            mAgainstDifference = (TextView) itemView.findViewById(R.id.against_difference);
+            mPoints = (TextView) itemView.findViewById(R.id.points);
+        }
+    }
 
 }

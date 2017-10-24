@@ -32,15 +32,23 @@ public class MainActivity extends AppCompatActivity implements IEventListener {
 
 	@Override
 	public void onBackPressed() {
-		if (mFragmentManager.getBackStackEntryCount() > 0) mFragmentManager.popBackStack();
-		else super.onBackPressed();
+		if (mFragmentManager.getBackStackEntryCount() > 0) {
+			mFragmentManager.popBackStack();
+		}
+		else{
+			super.onBackPressed();
+		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (mToolbar != null) mToolbar = null;
-		if (mFragmentManager != null) mFragmentManager = null;
+		if (mToolbar != null) {
+			mToolbar = null;
+		}
+		if (mFragmentManager != null){
+			mFragmentManager = null;
+		}
 	}
 
 	@Override

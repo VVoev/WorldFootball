@@ -20,53 +20,49 @@ import java.util.Locale;
 
 public class FixturesAdapter extends AbstractRecyclerAdapter<Fixture, FixturesAdapter.FixturesViewHolder> {
 
-	private Resources mResources;
+    private Resources mResources;
 
-	public FixturesAdapter(Resources resources, ArrayList<Fixture> list) {
-		super(list);
-		mResources = resources;
-	}
+    public FixturesAdapter(Resources resources, ArrayList<Fixture> list) {
+        super(list);
+        mResources = resources;
+    }
 
-	@Override
-	public FixturesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fixture, parent, false);
-		return new FixturesViewHolder(view);
-	}
+    @Override
+    public FixturesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fixture, parent, false);
+        return new FixturesViewHolder(view);
+    }
 
-	@Override
-	public void onBindViewHolder(FixturesViewHolder holder, int position) {
-		Fixture item = mList.get(position);
-		holder.mHomeTeamName.setText(item.getHomeTeamName());
-		holder.mAwayTeamName.setText(item.getAwayTeamName());
-		if (item.getStatus() != Fixture.TIMED) {
-			UserInterface.hide(holder.mDate);
-			UserInterface.show(holder.mResult);
-			holder.mResult.setText(String.format(mResources.getString(
-					R.string.fixtures_list_item_result),
-					item.getGoalsHomeTeam(),
-					item.getGoalsAwayTeam()));
-		}
-		else {
-			UserInterface.hide(holder.mResult);
-			UserInterface.show(holder.mDate);
-			DateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
-			holder.mDate.setText(format.format(new Date(item.getDate())));
-		}
-	}
+    @Override
+    public void onBindViewHolder(FixturesViewHolder holder, int position) {
+        Fixture item = mList.get(position);
+        holder.mHomeTeamName.setText(item.getHomeTeamName());
+        holder.mAwayTeamName.setText(item.getAwayTeamName());
+        if (item.getStatus() != Fixture.TIMED) {
+            UserInterface.hide(holder.mDate);
+            UserInterface.show(holder.mResult);
+            holder.mResult.setText(String.format(mResources.getString(R.string.fixtures_list_item_result), item.getGoalsHomeTeam(), item.getGoalsAwayTeam()));
+        } else {
+            UserInterface.hide(holder.mResult);
+            UserInterface.show(holder.mDate);
+            DateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            holder.mDate.setText(format.format(new Date(item.getDate())));
+        }
+    }
 
-	public static class FixturesViewHolder extends RecyclerView.ViewHolder {
+    public static class FixturesViewHolder extends RecyclerView.ViewHolder {
 
-		private TextView mHomeTeamName,
-				mAwayTeamName,
-				mDate,
-				mResult;
+        private TextView mHomeTeamName;
+        private TextView mAwayTeamName;
+        private TextView mDate;
+        private TextView mResult;
 
-		public FixturesViewHolder(View itemView) {
-			super(itemView);
-			mHomeTeamName = (TextView) itemView.findViewById(R.id.home_team_name);
-			mAwayTeamName = (TextView) itemView.findViewById(R.id.away_team_name);
-			mDate = (TextView) itemView.findViewById(R.id.date);
-			mResult = (TextView) itemView.findViewById(R.id.result);
-		}
-	}
+        public FixturesViewHolder(View itemView) {
+            super(itemView);
+            mHomeTeamName = (TextView) itemView.findViewById(R.id.home_team_name);
+            mAwayTeamName = (TextView) itemView.findViewById(R.id.away_team_name);
+            mDate = (TextView) itemView.findViewById(R.id.date);
+            mResult = (TextView) itemView.findViewById(R.id.result);
+        }
+    }
 }

@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * @param <OL> object of list
- * @param <VH> ViewHolder
- *             This implementation of generic recycler adapter is truly inspired from Firebase Database UI Adapter.
+ This implementation of generic recycler adapter is truly inspired from Firebase Database UI Adapter.
  */
 public abstract class AbstractRecyclerAdapter<OL, VH extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<VH>
@@ -45,7 +43,9 @@ public abstract class AbstractRecyclerAdapter<OL, VH extends RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        if (mList != null) return mList.size();
+        if (mList != null) {
+            return mList.size();
+        }
         else {
             L.e(AbstractRecyclerAdapter.class, "mList == null");
             return 0;
@@ -75,8 +75,12 @@ public abstract class AbstractRecyclerAdapter<OL, VH extends RecyclerView.ViewHo
 
     @NonNull
     public ArrayList<OL> getList() {
-        if (mList != null) return mList;
-        else return new ArrayList<>();
+        if (mList != null){
+            return mList;
+        }
+        else{
+            return new ArrayList<>();
+        }
     }
 
     public OL getItem(int position) {
@@ -91,11 +95,15 @@ public abstract class AbstractRecyclerAdapter<OL, VH extends RecyclerView.ViewHo
     }
 
     public void setDragEnabled(boolean dragEnabled) {
-        if (callback != null) callback.setDragEnabled(dragEnabled);
+        if (callback != null){
+            callback.setDragEnabled(dragEnabled);
+        }
     }
 
     public void setSwipeEnabled(boolean swipeEnabled) {
-        if (callback != null) callback.setSwipeEnabled(swipeEnabled);
+        if (callback != null){
+            callback.setSwipeEnabled(swipeEnabled);
+        }
     }
 
     public void addItem(int index, OL item) {

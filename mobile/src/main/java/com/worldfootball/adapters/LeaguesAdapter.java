@@ -14,8 +14,6 @@ import java.util.ArrayList;
 
 public class LeaguesAdapter extends AbstractRecyclerAdapter<League, LeaguesAdapter.LeagueViewHolder> implements IOnItemTouchAdapter {
 
-
-
 	public LeaguesAdapter(ArrayList<League> list) {
 		super(list);
 	}
