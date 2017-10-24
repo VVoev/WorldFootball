@@ -51,6 +51,16 @@
 			android:textColor="@color/fixture_details_teams_text"
 			android:textSize="16sp"
 			tools:text="Away team"/>
+		<TextView
+			android:id="@+id/winRates"
+			android:layout_width="@dimen/head2head"
+			android:layout_height="@dimen/fixture_details_result_size"
+			android:layout_centerInParent="true"
+			android:background="@drawable/fixture_result_background"
+			android:gravity="center"
+			android:textSize="@dimen/scores_table_text_size"
+			tools:text="2 : 3"
+			android:textColor="@color/head2head_title"/>
 
 	</RelativeLayout>
 

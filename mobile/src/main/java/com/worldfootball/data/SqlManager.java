@@ -5,12 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.worldfootball.globalConstants.DBConst;
+import com.worldfootball.globalConstants.DbConstants;
 
 public class SqlManager extends SQLiteOpenHelper {
 
-	private static final String DB_NAME = "openarena.ApplicationDB";
+	private static final String DB_NAME = "WorldFootball";
 	private static final int DB_VERSION = 1;
 
 	private static volatile SqlManager sInstance;
@@ -28,33 +27,73 @@ public class SqlManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		StringBuilder params1 = new StringBuilder()
-				.append(DBConst.ID).append(" INTEGER NOT NULL,")
-				.append(DBConst.CAPTION).append(" TEXT,")
-				.append(DBConst.LEAGUE).append(" TEXT,")
-				.append(DBConst.YEAR).append(" INTEGER,")
-				.append(DBConst.CURRENT_MATCHDAY).append(" INTEGER,")
-				.append(DBConst.NUMBER_OF_MATCHDAYS).append(" INTEGER,")
-				.append(DBConst.NUMBER_OF_TEAMS).append(" INTEGER,")
-				.append(DBConst.NUMBER_OF_GAMES).append(" INTEGER,")
-				.append(DBConst.LAST_UPDATED).append(" INTEGER");
+		String leagues = DbConstants.ID + " INTEGER NOT NULL," +
+				DbConstants.CAPTION + " TEXT," +
+				DbConstants.LEAGUE + " TEXT," +
+				DbConstants.YEAR + " INTEGER," +
+				DbConstants.CURRENT_MATCHDAY + " INTEGER," +
+				DbConstants.NUMBER_OF_MATCHDAYS + " INTEGER," +
+				DbConstants.NUMBER_OF_TEAMS + " INTEGER," +
+				DbConstants.NUMBER_OF_GAMES + " INTEGER," +
+				DbConstants.LAST_UPDATED + " INTEGER";
 
-		createTable(db, DBConst.TABLE_LEAGUES, params1.toString());
+		String fixtures = DbConstants.ID + " INTEGER NOT NULL," +
+				DbConstants.SOCCER_SEASON_ID + " INTEGER," +
+				DbConstants.DATE + " INTEGER," +
+				DbConstants.STATUS + " INTEGER," +
+				DbConstants.MATCHDAY + " INTEGER," +
+				DbConstants.HOME_TEAM_ID + " INTEGER NOT NULL," +
+				DbConstants.HOME_TEAM_NAME + " TEXT," +
+				DbConstants.AWAY_TEAM_ID + " INTEGER NOT NULL," +
+				DbConstants.AWAY_TEAM_NAME + " TEXT," +
+				DbConstants.GOALS_HOME_TEAM + " INTEGER," +
+				DbConstants.GOALS_AWAY_TEAM + " INTEGER";
+
+		String head2head = DbConstants.FIXTURE_ID + " INTEGER NOT NULL," +
+				DbConstants.COUNT + " INTEGER," +
+				DbConstants.TIME_FRAME_START + " INTEGER," +
+				DbConstants.TIME_FRAME_END + " INTEGER," +
+				DbConstants.HOME_TEAM_WINS + " INTEGER," +
+				DbConstants.AWAY_TEAM_WINS + " INTEGER," +
+				DbConstants.DRAWS + " INTEGER";
+
+		String scores = DbConstants.SOCCER_SEASON_ID + " INTEGER NOT NULL," +
+				DbConstants.RANK + " INTEGER," +
+				DbConstants.TEAM + " TEXT," +
+				DbConstants.TEAM_ID + " INTEGER," +
+				DbConstants.PLAYED_GAMES + " INTEGER," +
+				DbConstants.CREST_URI + " TEXT," +
+				DbConstants.POINTS + " INTEGER," +
+				DbConstants.GOALS + " INTEGER," +
+				DbConstants.GOAL_AGAINST + " INTEGER," +
+				DbConstants.GOAL_DIFFERENCE + " INTEGER";
+
+		innitializeTable(db, DbConstants.TABLE_LEAGUES, leagues);
+		innitializeTable(db, DbConstants.TABLE_FIXTURES, fixtures);
+		innitializeTable(db, DbConstants.TABLE_HEAD2HEAD, head2head);
+		innitializeTable(db, DbConstants.TABLE_SCORES, scores);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		dropData(db);
+		dropTables(db);
 		onCreate(db);
 	}
 
 	@Override
 	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		dropData(db);
+		dropTables(db);
 		onCreate(db);
 	}
 
-	private void createTable(SQLiteDatabase db, String tableName, String params) {
+	public void dropTables(SQLiteDatabase db) {
+		db.execSQL("DROP TABLE IF EXISTS " + DbConstants.TABLE_LEAGUES);
+		db.execSQL("DROP TABLE IF EXISTS " + DbConstants.TABLE_FIXTURES);
+		db.execSQL("DROP TABLE IF EXISTS " + DbConstants.TABLE_HEAD2HEAD);
+		db.execSQL("DROP TABLE IF EXISTS " + DbConstants.TABLE_SCORES);
+	}
+
+	private void innitializeTable(SQLiteDatabase db, String tableName, String params) {
 		StringBuilder query = new StringBuilder()
 				.append("CREATE TABLE ").append(tableName)
 				.append("(").append(params).append(");");
@@ -74,9 +113,8 @@ public class SqlManager extends SQLiteOpenHelper {
 		getWritableDatabase().update(tableName, values, sb.toString(), arguments);
 	}
 
-	/**
-	 *
-	 * @param orderBy your column + <b>ASC</b> or <b>DESC</b>
+	/*
+	Order columns ASC OR DSC
 	 */
 	public Cursor get(String tableName, String[] columns, String[] where,
 					  String[] arguments, String groupBy, String having, String orderBy) {
@@ -103,19 +141,16 @@ public class SqlManager extends SQLiteOpenHelper {
 		return get(tableName, null, where, arguments, null, null, null);
 	}
 
-	/**
-	 * Get all columns and sort
-	 * @param orderBy column to order
-	 * @param reverse if <b>true</b> from large to small
-	 * @return Cursor
+	/*
+	Get all columns sorted
 	 */
 	public Cursor getAll(
 			String tableName,
 			String[] where,
 			String[] arguments,
 			String orderBy,
-			boolean reverse) {
-		orderBy += reverse ? " DESC" : " ASC";
+			boolean beginningAtLarge) {
+		orderBy += beginningAtLarge ? " DESC" : " ASC";
 		return get(tableName, null, where, arguments, null, null, orderBy);
 	}
 
@@ -135,14 +170,6 @@ public class SqlManager extends SQLiteOpenHelper {
 
 	public void deleteAll(String tableName) {
 		getWritableDatabase().delete(tableName, null, null);
-	}
-
-	public void dropData(SQLiteDatabase db) {
-		db.execSQL("DROP TABLE IF EXISTS " + DBConst.TABLE_TEAMS);
-	}
-
-	public void clean() {
-		if (sInstance != null) sInstance = null;
 	}
 
 }

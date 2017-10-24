@@ -1,16 +1,36 @@
 <resources>
 	<string name="app_name">World Football</string>
-	<string name="splashscreen_title">Welcome</string>
 
+	<string name="snackbar_result_null_text">No internet connection</string>
+	<string name="snackbar_result_null_action">refresh</string>
+	<string name="error_content_text">Something wrong</string>
+	<string name="empty_content_text">Nothing to show</string>
 
-	<!-- API -->
-	<string name="api_default_request">http://api.football-data.org/v1/soccerseasons</string>
-	<string name="api_token">2096822335da489d83ef7b705e4ccd2a</string>
+	<string name="leagues_title">Leagues list</string>
+	<string name="leagues_subtitle">2017 – 2018</string>
+
+	<string name="fixtures_matchday">Round %1$d</string>
+	<string name="fixtures_list_item_result">%1$d : %2$d</string>
+
+	<string name="fixture_details_title">Fixture details</string>
+	<string name="fixture_details_result">%1$d : %2$d</string>
+	<string name="fixture_details_empty_result">- : -</string>
+	<string name="fixture_info_winRates" translatable="false">%1$d%% / %2$d%% / %3$d%%</string>
+
+	<string name="scores_against_difference">%1$d/%2$d</string>
+	<string name="scores_head_team">Team</string>
+	<string name="scores_head_number">№</string>
+	<string name="scores_head_played_games">PG</string>
+	<string name="scores_head_goals">G</string>
+	<string name="scores_head_against_difference">A/D</string>
+	<string name="scores_head_points">P</string>
+
+	<string name="option_refresh">Refresh</string>
+	<string name="option_score_table">Score table</string>
+	<string name="context_head_select_matchday">Select Round</string>
+
+	<!-- CONST resources -->
+	<string name="api_key">16c130d43d5543bfac04ffef8b3da068</string>
 	<string name="api_response_control_mini">minified</string>
 	<string name="api_response_control_full">full</string>
-
-	<string name="drawer_open">Open drawer</string>
-	<string name="drawer_close">Close drawer</string>
-	<string name="navigation_settings">Settings</string>
-	<string name="navigation_search">Search</string>
 </resources>

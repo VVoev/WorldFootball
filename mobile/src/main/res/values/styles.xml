@@ -1,8 +1,6 @@
 <resources>
 
-	<!-- Base application theme. -->
 	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-		<!-- Customize your theme here. -->
 		<item name="colorPrimary">@color/primary</item>
 		<item name="colorPrimaryDark">@color/primary_dark</item>
 		<item name="colorAccent">@color/accent</item>
@@ -18,12 +16,6 @@
 		<item name="titleTextColor">@color/toolbar_title</item>
 		<item name="subtitleTextColor">@color/toolbar_subtitle</item>
 		<item name="android:textColorSecondary">@color/toolbar_title</item>
-	</style>
-
-	<style name="AppTheme.Navigation">
-		<item name="android:windowBackground">@color/navigation_background</item>
-		<item name="android:textColorHint">@color/navigation_text_color</item>
-		<item name="android:textColor">@color/navigation_text_color</item>
 	</style>
 
 	<style name="AppTheme.AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">

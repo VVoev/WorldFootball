@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="accent">#FFD740</color>
-	<color name="primary">#4CAF50</color>
-	<color name="primary_dark">#388E3C</color>
-	<color name="toolbar_title">#000</color>
-	<color name="toolbar_subtitle">#333</color>
-	<color name="navigation_background">#b63920</color>
-	<color name="navigation_background_separator">#444</color>
-	<color name="navigation_background_pressed">#344</color>
-	<color name="navigation_text_color">#ccc</color>
-	<color name="splashscreen_title">#FFF</color>
-	<color name="window_background">#E8F5E9</color>
+    <color name="accent">#FFD740</color>
+    <color name="alert_content">#a1ff96</color>
+    <color name="primary">#173f7f</color>
+    <color name="primary_dark">#0a1d46</color>
+
+    <color name="toolbar_title">#ff0000</color>
+    <color name="toolbar_subtitle">#ffffff</color>
+
+    <color name="leagues_list_text">#555</color>
+    <color name="leagues_list_background">#FAFAFA</color>
+    <color name="leagues_list_background_pressed">#E0E0E0</color>
+
+    <color name="fixtures_matchday">#444</color>
+    <color name="fixtures_matchday_background_pressed">#fffb00</color>
+    <color name="fixtures_list_text">#555</color>
+    <color name="fixtures_list_background">#8adaff</color>
+    <color name="fixtures_list_background_pressed">#fffb00</color>
+    <color name="fixtures_list_item_result_background">#ffffff</color>
+
+    <color name="fixture_details_result_background">#137ba1</color>
+    <color name="fixture_details_teams_background">#7d24fcf1</color>
+    <color name="fixture_details_result_text">#222</color>
+    <color name="fixture_details_teams_text">#333</color>
+    <color name="scores_separator_background">#7d06fff3</color>
+    <color name="window_background">#4b80d4</color>
+    <color name="window_background_pressed">#285294</color>
+
+    <color name="head2head_title">#000000</color>
 </resources>

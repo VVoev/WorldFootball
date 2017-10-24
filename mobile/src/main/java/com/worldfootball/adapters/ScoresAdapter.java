@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.worldfootball.R;
 import com.worldfootball.adapters.abstractions.AbstractRecyclerAdapter;

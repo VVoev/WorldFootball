@@ -2,18 +2,20 @@ package com.worldfootball.presenters;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 
-import com.worldfootball.contracts.IOnGetLeagues;
+import com.worldfootball.data.DBManager;
+import com.worldfootball.contracts.IOnResultListener;
+import com.worldfootball.globalConstants.Constants;
+import com.worldfootball.models.Fixture;
+import com.worldfootball.models.Head2head;
+import com.worldfootball.models.League;
+import com.worldfootball.models.Scores;
+import com.worldfootball.utils.L;
 import com.worldfootball.webApi.Api;
-import com.worldfootball.preferances.PreferencesManager;
-import com.worldfootball.contracts.IOnResult;
-import com.worldfootball.model.League;
-import com.worldfootball.globalConstants.Const;
-import com.worldfootball.util.L;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,103 +23,262 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class Presenter implements IOnGetLeagues {
+public class Presenter {
 
-	private static final int NUMBERS_OF_CORES = Runtime.getRuntime().availableProcessors();
-	private static ThreadPoolExecutor sExecutor;
-	private static Handler sHandler;
-	private static Context sContext;
+	private static final int CPU_NUMBER = Runtime.getRuntime().availableProcessors();
+	private static Presenter mInstance;
+	private ThreadPoolExecutor sExecutor;
+	private Handler mHandler;
 
-	public static void init(Context context) {
-		if (Presenter.sContext == null) Presenter.sContext = context;
-		if (sHandler == null) sHandler = new Handler();
-		if (sExecutor == null || sExecutor.isShutdown()) {
-			sExecutor = new ThreadPoolExecutor(
-					1,
-					NUMBERS_OF_CORES,
-					5000,
-					TimeUnit.MILLISECONDS,
-					new LinkedBlockingQueue<Runnable>());
+	public static synchronized void init(Context context) {
+		DBManager.init(context);
+		if (mInstance == null) synchronized (Presenter.class) {
+			if (mInstance == null) {
+				mInstance = new Presenter();
+				mInstance.mHandler = new Handler();
+				mInstance.sExecutor = new ThreadPoolExecutor(
+						1,
+						CPU_NUMBER,
+						Constants.KEEP_ALIVE,
+						TimeUnit.MILLISECONDS,
+						new LinkedBlockingQueue<Runnable>());
+			}
 		}
 	}
 
-	public static void getListOfLeagues(final Context context, final IOnGetLeagues callback) {
+	public static synchronized Presenter getInstance() {
+		return mInstance;
+	}
+
+	protected Presenter() {}
+
+	public void getListOfLeagues(final Context context, final OnGetLeagues callback) {
 		sExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
+				final ArrayList<League> dbList = DBManager.getLeaguesList();
+				if (dbList != null) mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						callback.onSuccess(dbList);
+					}
+				});
 				int year = Calendar.getInstance().get(Calendar.YEAR);
-				String resultCurrent = Api.getLeaguesList(context, year);
-				String resultLast = Api.getLeaguesList(context, year - 1);
+				String resultCurrent,
+						resultLast = null;
+				resultCurrent= Api.getLeagueByYear(context, year);
+				if (resultCurrent != null) resultLast = Api.getLeagueByYear(context, year);
 				if (resultCurrent != null && resultLast != null) {
-					ArrayList<League> list = null;
 					try {
 						JSONArray currentArray = new JSONArray(resultCurrent);
 						JSONArray lastArray = new JSONArray(resultLast);
-						list = parseLeagues(currentArray);
-						list.addAll(parseLeagues(lastArray));
+						final ArrayList<League> list = League.parseArray(currentArray);
+						list.addAll(League.parseArray(lastArray));
+						if (!list.isEmpty()) {
+							DBManager.setLeaguesList(list);
+							mHandler.post(new Runnable() {
+								@Override
+								public void run() {
+									callback.onSuccess(list);
+								}
+							});
+						}
+						else mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								callback.onError(Constants.ERROR_CODE_RESULT_EMPTY);
+							}
+						});
 
 					} catch (JSONException e) {
 						L.e(Presenter.class, e.toString());
-						e.printStackTrace();
-					}
-					if (list != null) {
-						final ArrayList<League> finalList = list;
-						sHandler.post(new Runnable() {
+						mHandler.post(new Runnable() {
 							@Override
 							public void run() {
-								callback.onSuccess(finalList);
-							}
-						});
-					}
-					else {
-						sHandler.post(new Runnable() {
-							@Override
-							public void run() {
-								callback.onError();
+								callback.onError(Constants.ERROR_CODE_PARSE_ERROR);
 							}
 						});
 					}
 				}
-				else sHandler.post(new Runnable() {
+				else mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-						callback.onError();
+						callback.onError(Constants.ERROR_CODE_RESULT_NULL);
 					}
 				});
 			}
 		});
 	}
 
-	public static boolean isFirstEnter() {
-		return PreferencesManager.getInstance(sContext).getBoolean(Const.PREF_FIRST_ENTER, true);
-	}
-
-	@NonNull
-	private static ArrayList<League> parseLeagues(JSONArray array) {
-		ArrayList<League> list = new ArrayList<>();
-		if (array != null) {
-			int count = array.length();
-			for (int i = 0; i < count; i++) {
-				try {
-					list.add(League.parse(array.getJSONObject(i)));
-				} catch (JSONException e) {
-					L.e(Presenter.class, e.toString());
-					e.printStackTrace();
+	public void getListOfFixtures(
+			final Context context,
+			final int soccerseasonId,
+			final int matchday,
+			final OnGetFixtures callback) {
+		sExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				final ArrayList<Fixture> dbList = DBManager.getFixturesListByMatchday(soccerseasonId, matchday);
+				if (dbList != null) mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						callback.onSuccess(dbList);
+					}
+				});
+				String result = Api.getFixturesByMatchday(context, soccerseasonId, matchday);
+				if (result != null) {
+					try {
+						JSONArray array = new JSONObject(result).getJSONArray("fixtures");
+						final ArrayList<Fixture> list = Fixture.parseArray(array);
+						if (list != null && !list.isEmpty()) {
+							DBManager.setFixturesList(list);
+							mHandler.post(new Runnable() {
+								@Override
+								public void run() {
+									callback.onSuccess(list);
+								}
+							});
+						}
+						else mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								callback.onError(Constants.ERROR_CODE_RESULT_EMPTY);
+							}
+						});
+					} catch (JSONException e) {
+						L.e(Presenter.class, e.toString());
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								callback.onError(Constants.ERROR_CODE_PARSE_ERROR);
+							}
+						});
+					}
 				}
+				else mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						callback.onError(Constants.ERROR_CODE_RESULT_NULL);
+					}
+				});
 			}
-			return list;
-		}
-		else return list;
+		});
 	}
 
-
-	@Override
-	public void onSuccess(ArrayList<League> data) {
-
+	public void getScores(
+			final Context context,
+			final int soccerSeasonId,
+			final OnGetScores callback) {
+		sExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				final ArrayList<Scores> dbList = DBManager.getScoresList(soccerSeasonId);
+				if (dbList != null) mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						callback.onSuccess(dbList);
+					}
+				});
+				String result = Api.getScores(context, soccerSeasonId);
+				if (result != null) {
+					try {
+						JSONArray array = new JSONObject(result).getJSONArray("standing");
+						final ArrayList<Scores> list = Scores.parseArray(soccerSeasonId, array);
+						if (list != null && !list.isEmpty()) {
+							DBManager.setScoresList(list);
+							mHandler.post(new Runnable() {
+								@Override
+								public void run() {
+									callback.onSuccess(list);
+								}
+							});
+						}
+						else mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								callback.onError(Constants.ERROR_CODE_RESULT_EMPTY);
+							}
+						});
+					} catch (JSONException e) {
+						L.e(Presenter.class, e.toString());
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								callback.onError(Constants.ERROR_CODE_PARSE_ERROR);
+							}
+						});
+					}
+				}
+				else mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						callback.onError(Constants.ERROR_CODE_RESULT_NULL);
+					}
+				});
+			}
+		});
 	}
 
-	@Override
-	public void onError() {
-
+	public void getFixtureDetails(
+			final Context context,
+			final int fixtureId,
+			final OnGetFixtureDetails callback) {
+		sExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				final Head2head dbHead2head = DBManager.getHead2head(fixtureId);
+				if (dbHead2head != null) mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						callback.onSuccess(dbHead2head);
+					}
+				});
+				String result = Api.getFixtureDetailsById(context, fixtureId);
+				if (result != null) {
+					try {
+						JSONObject object = new JSONObject(result).getJSONObject("head2head");
+						final Head2head head2head = Head2head.parse(fixtureId, object);
+						if (head2head != null) {
+							DBManager.setHead2head(dbHead2head);
+							mHandler.post(new Runnable() {
+								@Override
+								public void run() {
+									callback.onSuccess(head2head);
+								}
+							});
+						}
+						else mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								callback.onError(Constants.ERROR_CODE_RESULT_NULL);
+							}
+						});
+					} catch (JSONException e) {
+						L.e(Presenter.class, e.toString());
+						mHandler.post(new Runnable() {
+							@Override
+							public void run() {
+								callback.onError(Constants.ERROR_CODE_PARSE_ERROR);
+							}
+						});
+					}
+				}
+				else mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						callback.onError(Constants.ERROR_CODE_RESULT_NULL);
+					}
+				});
+			}
+		});
 	}
+
+	public interface OnGetLeagues extends IOnResultListener<ArrayList<League>> {}
+
+	public interface OnGetFixtures extends IOnResultListener<ArrayList<Fixture>> {}
+
+	public interface OnGetFixtureDetails extends IOnResultListener<Head2head> {}
+
+	public interface OnGetScores extends IOnResultListener<ArrayList<Scores>> {}
+
 }
